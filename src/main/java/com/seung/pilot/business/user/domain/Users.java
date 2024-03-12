@@ -1,5 +1,7 @@
-package com.seung.pilot.business.user;
+package com.seung.pilot.business.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seung.pilot.business.user.domain.UserRoles;
 import com.seung.pilot.commons.BaseEntity;
 import com.seung.pilot.commons.enums.Gender;
 import jakarta.persistence.*;
@@ -10,6 +12,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -47,5 +52,16 @@ public class Users extends BaseEntity implements Serializable {
     @Column(columnDefinition = "varchar(10) COMMENT '성별'")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @JsonIgnore
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRoles> userRoles = new ArrayList<>();
+    public List<String> getUserRoleForString() {
+        return this.userRoles
+                .stream()
+                .map(o -> o.getUserRole().getId())
+                .collect(Collectors.toList());
+    }
 
 }
