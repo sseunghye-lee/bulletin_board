@@ -1,12 +1,15 @@
 package com.seung.pilot.business.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.seung.pilot.business.user.domain.UserRoles;
 import com.seung.pilot.commons.BaseEntity;
 import com.seung.pilot.commons.dto.request.user.SignUpRequest;
+import com.seung.pilot.commons.dto.response.user.SignInResponse;
 import com.seung.pilot.commons.dto.response.user.SignUpResponse;
 import com.seung.pilot.commons.enums.Gender;
 import com.seung.pilot.commons.enums.UserRole;
+import com.seung.pilot.commons.security.EncryptService;
+import com.seung.pilot.commons.security.TokenService;
+import com.seung.pilot.commons.utils.JwtUtil;
 import com.seung.pilot.commons.utils.ModelMapperUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,8 +19,12 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Entity
@@ -83,6 +90,38 @@ public class Users extends BaseEntity implements Serializable {
                 .stream()
                 .map(o -> o.getUserRole().getId())
                 .collect(Collectors.toList());
+    }
+
+    public List<UserRole> getUserRole() {
+        return this.userRoles
+                .stream()
+                .map(o -> o.getUserRole())
+                .collect(Collectors.toList());
+    }
+
+    public SignInResponse signIn(Boolean remember) {
+        String token = TokenService.generateToken(this, remember);
+        String refreshToken = TokenService.generateReFreshToken(this, remember);
+        Map<String, Object> claims = JwtUtil.getClaims(token);
+        LocalDateTime exp = LocalDateTime.ofInstant(
+                Instant.ofEpochSecond(Long.valueOf(claims.get("exp").toString())),
+                TimeZone.getDefault().toZoneId());
+
+        SignInResponse.Me me = SignInResponse.Me.builder()
+                .userEmail(userEmail)
+                .userId(userId)
+                .userName(userName)
+                .userPhoneNumber(EncryptService.decryptPhoneNumber(userPhoneNumber))
+                .nickName(nickName)
+                .build();
+
+        return SignInResponse.builder()
+                .userRoles(this.getUserRole())
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .expired(exp)
+                .me(me)
+                .build();
     }
 
 }

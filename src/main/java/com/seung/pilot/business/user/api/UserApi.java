@@ -1,7 +1,9 @@
 package com.seung.pilot.business.user.api;
 
 import com.seung.pilot.business.user.service.UserService;
+import com.seung.pilot.commons.dto.request.user.SignInRequest;
 import com.seung.pilot.commons.dto.request.user.SignUpRequest;
+import com.seung.pilot.commons.dto.response.user.SignInResponse;
 import com.seung.pilot.commons.dto.response.user.SignUpResponse;
 import com.seung.pilot.commons.exception.SignInException;
 import com.seung.pilot.commons.utils.ApiUtils.ApiResult;
@@ -26,4 +28,10 @@ public class UserApi {
     public ApiResult<SignUpResponse> signUp(@Valid @RequestBody SignUpRequest request) throws SignInException {
         return success(userService.signUp(request));
     }
+
+    @PostMapping("/sign-in")
+    public ApiResult<SignInResponse> signIn(@Valid @RequestBody SignInRequest request) throws SignInException {
+        return success(userService.signIn(request));
+    }
+
 }
