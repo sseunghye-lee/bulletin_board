@@ -1,6 +1,10 @@
 package com.seung.pilot.business.board.domain;
 
+import com.seung.pilot.commons.dto.request.board.BoardRequest;
+import com.seung.pilot.commons.dto.request.board.UpdateBoardRequest;
+import com.seung.pilot.commons.dto.response.board.BoardResponse;
 import com.seung.pilot.commons.enums.BoardCategory;
+import com.seung.pilot.commons.utils.ModelMapperUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,5 +45,23 @@ public class Board implements Serializable {
     @Column(columnDefinition = "bigint COMMENT '사용자 아이디'")
     private Long userId;
 
+    public static Board insert(Long userId, BoardRequest boardRequest) {
+        return Board.builder()
+                .boardCategory(boardRequest.getBoardCategory())
+                .title(boardRequest.getTitle())
+                .view(0L)
+                .content(boardRequest.getContent())
+                .userId(userId)
+                .build();
+    }
+
+    public BoardResponse convertDto() {
+        return ModelMapperUtil.get().map(this, BoardResponse.class);
+    }
+
+    public void updateBoard(UpdateBoardRequest updateBoardRequest) {
+        this.title = updateBoardRequest.getTitle();
+        this.content = updateBoardRequest.getContent();
+    }
 
 }
