@@ -1,5 +1,6 @@
 package com.seung.pilot.business.board.domain;
 
+import com.seung.pilot.commons.BaseEntity;
 import com.seung.pilot.commons.dto.request.board.BoardRequest;
 import com.seung.pilot.commons.dto.request.board.UpdateBoardRequest;
 import com.seung.pilot.commons.dto.response.board.BoardResponse;
@@ -19,7 +20,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Board implements Serializable {
+public class Board extends BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -653080974997225600L;
@@ -62,6 +63,10 @@ public class Board implements Serializable {
     public void updateBoard(UpdateBoardRequest updateBoardRequest) {
         this.title = updateBoardRequest.getTitle();
         this.content = updateBoardRequest.getContent();
+    }
+
+    public void addView() {
+        this.view = this.view + 1;
     }
 
 }
