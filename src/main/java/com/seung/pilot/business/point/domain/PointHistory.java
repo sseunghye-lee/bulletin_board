@@ -1,4 +1,4 @@
-package com.seung.pilot.business.point;
+package com.seung.pilot.business.point.domain;
 
 import com.seung.pilot.commons.BaseEntity;
 import com.seung.pilot.commons.enums.PointHistoryType;

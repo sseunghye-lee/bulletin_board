@@ -1,4 +1,4 @@
-package com.seung.pilot.business.point;
+package com.seung.pilot.business.point.domain;
 
 import com.seung.pilot.commons.BaseEntity;
 import jakarta.persistence.*;
@@ -40,4 +40,8 @@ public class PointHistoryDetail extends BaseEntity implements Serializable {
 
     @Column(columnDefinition = "bigint COMMENT '포인트 내역 아이디'")
     private Long pointHistoryId;
+
+    public void setPointAccumulateId() {
+        pointAccumulateId = pointHistoryDetailId;
+    }
 }
