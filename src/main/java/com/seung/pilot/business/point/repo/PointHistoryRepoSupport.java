@@ -1,7 +1,7 @@
 package com.seung.pilot.business.point.repo;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.seung.pilot.business.point.QPointHistory;
+import com.seung.pilot.business.point.domain.QPointHistory;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 

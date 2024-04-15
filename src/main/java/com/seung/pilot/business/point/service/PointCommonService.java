@@ -4,12 +4,13 @@ import com.seung.pilot.business.point.domain.PointHistory;
 import com.seung.pilot.business.point.domain.PointHistoryDetail;
 import com.seung.pilot.business.point.repo.PointHistoryDetailRepo;
 import com.seung.pilot.business.point.repo.PointHistoryRepo;
-import com.seung.pilot.commons.dto.request.point.AddPointRequest;
 import com.seung.pilot.commons.enums.PointHistoryType;
 import com.seung.pilot.commons.enums.PointStat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -19,15 +20,15 @@ public class PointCommonService {
     private final PointHistoryRepo pointHistoryRepo;
     private final PointHistoryDetailRepo pointHistoryDetailRepo;
 
-    public Long addPoint(AddPointRequest request) {
+    public Long addPoint(Long userId) {
         PointHistory pointHistory = pointHistoryRepo.save(
                 PointHistory.builder()
-                        .userId(request.getUserId())
+                        .userId(userId)
                         .amount(3L)
                         .pointHistoryType(PointHistoryType.REGISTRATION)
                         .pointStat(PointStat.ACCUMULATE)
-                        .endDt(request.getEndDt())
-                        .remarks(request.getRemarks())
+                        .endDt(LocalDateTime.now().plusMonths(2L))
+                        .remarks("게시글 등록 적립")
                         .build()
         );
 

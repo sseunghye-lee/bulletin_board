@@ -3,6 +3,7 @@ package com.seung.pilot.business.board.service;
 import com.seung.pilot.business.board.domain.Board;
 import com.seung.pilot.business.board.repo.BoardRepo;
 import com.seung.pilot.business.board.repo.BoardRepoSupport;
+import com.seung.pilot.business.point.service.PointCommonService;
 import com.seung.pilot.commons.dto.request.board.BoardRequest;
 import com.seung.pilot.commons.dto.request.board.UpdateBoardRequest;
 import com.seung.pilot.commons.dto.request.commons.BasicGetListRequest;
@@ -29,10 +30,12 @@ import java.util.List;
 public class BoardService {
     private final BoardRepo boardRepo;
     private final BoardRepoSupport boardRepoSupport;
+    private final PointCommonService pointCommonService;
 
     public BoardResponse insert(Long userId, BoardRequest boardRequest) {
         Board board = Board.insert(userId, boardRequest);
         boardRepo.save(board);
+        pointCommonService.addPoint(userId);
         return board.convertDto();
     }
 
