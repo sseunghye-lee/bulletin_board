@@ -14,7 +14,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public enum PointHistoryType implements IdEnum {
     REGISTRATION("REGISTRATION", "게시글등록"),
-    MODIFY("MODIFY", "게시글수정");
+    MODIFY("MODIFY", "게시글수정"),
+    DELETE("DELETE", "게시글삭제");
 
     private final String id;
     private final String desc;

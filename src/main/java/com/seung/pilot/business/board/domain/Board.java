@@ -60,9 +60,11 @@ public class Board extends BaseEntity implements Serializable {
         return ModelMapperUtil.get().map(this, BoardResponse.class);
     }
 
-    public void updateBoard(UpdateBoardRequest updateBoardRequest) {
+    public Boolean updateBoard(UpdateBoardRequest updateBoardRequest) {
         this.title = updateBoardRequest.getTitle();
         this.content = updateBoardRequest.getContent();
+
+        return true;
     }
 
     public void addView() {

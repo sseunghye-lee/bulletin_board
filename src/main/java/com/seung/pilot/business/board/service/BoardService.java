@@ -7,9 +7,11 @@ import com.seung.pilot.business.point.service.PointCommonService;
 import com.seung.pilot.commons.dto.request.board.BoardRequest;
 import com.seung.pilot.commons.dto.request.board.UpdateBoardRequest;
 import com.seung.pilot.commons.dto.request.commons.BasicGetListRequest;
+import com.seung.pilot.commons.dto.request.point.UsePointRequest;
 import com.seung.pilot.commons.dto.response.board.BoardResponse;
 import com.seung.pilot.commons.dto.response.board.GetBoardListResponse;
 import com.seung.pilot.commons.dto.response.board.GetMyBoardListResponse;
+import com.seung.pilot.commons.enums.PointHistoryType;
 import com.seung.pilot.commons.exception.NotAuthorizedException;
 import com.seung.pilot.commons.utils.ModelMapperUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -54,7 +56,14 @@ public class BoardService {
         if(board.getUserId() != userId) {
             throw new NotAuthorizedException("수정 불가능한 계정입니다.");
         }
-        board.updateBoard(updateBoardRequest);
+
+        Boolean flag = board.updateBoard(updateBoardRequest);
+
+        if(flag) {
+            UsePointRequest usePointRequest = new UsePointRequest(userId, 3L, PointHistoryType.MODIFY, "게시글 수정");
+            pointCommonService.usePoint(usePointRequest);
+        }
+
     }
 
     public void delete(Long bdId, Long userId) {
@@ -65,6 +74,9 @@ public class BoardService {
         }
 
         boardRepo.delete(board);
+
+        UsePointRequest usePointRequest = new UsePointRequest(userId, 2L, PointHistoryType.DELETE, "게시글 삭제");
+        pointCommonService.usePoint(usePointRequest);
     }
 
     public void addView(long bdId) {
