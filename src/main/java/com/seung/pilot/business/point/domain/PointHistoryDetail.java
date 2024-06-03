@@ -1,6 +1,7 @@
 package com.seung.pilot.business.point.domain;
 
 import com.seung.pilot.commons.BaseEntity;
+import com.seung.pilot.commons.dto.response.point.GetExpiredPointDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,5 +44,14 @@ public class PointHistoryDetail extends BaseEntity implements Serializable {
 
     public void setPointAccumulateId() {
         pointAccumulateId = pointHistoryDetailId;
+    }
+
+    public static PointHistoryDetail init(GetExpiredPointDto expiredPoint, Long historyId) {
+        return PointHistoryDetail.builder().userId(expiredPoint.getUserId())
+                .amount(expiredPoint.getTotalExpiredPoint() * -1)
+                .pointAccumulateId(expiredPoint.getPointAccumulateId())
+                .endDt(expiredPoint.getEndDt())
+                .pointHistoryId(historyId)
+                .build();
     }
 }

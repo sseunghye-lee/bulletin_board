@@ -1,6 +1,7 @@
 package com.seung.pilot.business.point.domain;
 
 import com.seung.pilot.commons.BaseEntity;
+import com.seung.pilot.commons.dto.response.point.GetTotalExpiredPointDto;
 import com.seung.pilot.commons.enums.PointHistoryType;
 import com.seung.pilot.commons.enums.PointStat;
 import jakarta.persistence.*;
@@ -47,4 +48,19 @@ public class PointHistory extends BaseEntity implements Serializable {
 
     @Column(name="remarks", columnDefinition = "text COMMENT '비고'")
     private String remarks;
+
+    public PointHistory deadline() {
+        this.pointStat = PointStat.EXPIRATION;
+        return this;
+    }
+
+    public static PointHistory init(GetTotalExpiredPointDto totalExpiredPoint) {
+        return PointHistory.builder().userId(totalExpiredPoint.getUserId())
+                .amount(totalExpiredPoint.getTotalExpiredPoint() * -1)
+                .pointHistoryType(null)
+                .pointStat(PointStat.EXPIRATION)
+                .endDt(null)
+                .remarks("만료소멸")
+                .build();
+    }
 }
