@@ -26,7 +26,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional
@@ -106,4 +110,30 @@ public class UserService {
 
         return new PageImpl<>(list, pageable, total);
     }
+
+    public List<GetUserListResponse> findByUserName(String userName) {
+        return userRepo.findByUserNameStartsWith(userName).stream().map(Users::convertListDto)
+                .collect(Collectors.toList());
+    }
+
+    public Map<Long, GetUserListResponse> getUsers(Set<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return Map.of();
+        }
+
+        return userRepo.findByUserIdIn(userIds).stream().map(Users::convertListDto)
+                .collect(Collectors.toMap(GetUserListResponse::getUserId, Function.identity()));
+    }
+
+    private GetUserListResponse convertToGetUserListResponse(Users user) {
+        GetUserListResponse userListResponse = new GetUserListResponse();
+        userListResponse.setUserId(user.getUserId());
+        userListResponse.setUserName(user.getUserName());
+        userListResponse.setNickName(user.getNickName());
+        userListResponse.setGender(user.getGender());
+        userListResponse.setCreatedDate(user.getCreatedDate());
+        return userListResponse;
+    }
+
+
 }

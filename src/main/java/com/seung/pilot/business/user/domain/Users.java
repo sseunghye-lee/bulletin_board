@@ -1,9 +1,11 @@
 package com.seung.pilot.business.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.seung.pilot.business.user.mapper.UsersMapper;
 import com.seung.pilot.commons.BaseEntity;
 import com.seung.pilot.commons.dto.request.user.SignUpRequest;
 import com.seung.pilot.commons.dto.request.user.UpdateUserRequest;
+import com.seung.pilot.commons.dto.response.user.GetUserListResponse;
 import com.seung.pilot.commons.dto.response.user.SignInResponse;
 import com.seung.pilot.commons.dto.response.user.SignUpResponse;
 import com.seung.pilot.commons.enums.Gender;
@@ -130,6 +132,10 @@ public class Users extends BaseEntity implements Serializable {
         this.userEmail = request.getUserEmail();
         this.userPhoneNumber = request.getUserPhoneNumber();
         this.loginPw = request.getLoginPw();
+    }
+
+    public GetUserListResponse convertListDto() {
+        return UsersMapper.INSTANCE.convertUserListDto(this);
     }
 
 }
