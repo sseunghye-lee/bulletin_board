@@ -36,6 +36,7 @@ public class PointApi {
         return success(pointHistoryService.getMyPointList(customUserDetails.getUserId()));
     }
 
+    @PreAuthorize("hasRole('ROLE_MASTER')")
     @GetMapping
     public ApiResult<Page<GetPointListResponse>> getPointList(PointListRequest request, Pageable pageable) {
         return success(pointHistoryService.getPointList(request, pageable));
