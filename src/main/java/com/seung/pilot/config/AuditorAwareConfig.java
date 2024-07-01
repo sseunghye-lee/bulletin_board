@@ -23,15 +23,9 @@ public class AuditorAwareConfig implements AuditorAware<Long> {
                 .map(authentication -> {
 
                     Collection<? extends GrantedAuthority> auths = authentication.getAuthorities();
-                    boolean isAnonymous = auths.contains(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
 
-                    if (!isAnonymous) {
-                        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-                        return userDetails.userId;
-                    }
-
-                    return null;
-
+                    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                    return userDetails.userId;
                 });
     }
 }
